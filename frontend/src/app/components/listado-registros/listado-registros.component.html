@@ -1,0 +1,60 @@
+<section>
+  <h2>Registros ({{ registros().length }})</h2>
+
+  @if (registros().length === 0) {
+    <p class="vacio">No hay registros. Carga un archivo Excel para empezar.</p>
+  } @else {
+    <table>
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Nombre</th>
+          <th>Email</th>
+          <th>Teléfono</th>
+          <th>Distrito</th>
+          <th>Sexo</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (r of registros(); track r.id) {
+          @if (editandoId() === r.id && borrador) {
+            <tr class="editando">
+              <td>{{ r.id }}</td>
+              <td><input [(ngModel)]="borrador.nombre" /></td>
+              <td><input type="email" [(ngModel)]="borrador.email" /></td>
+              <td><input [(ngModel)]="borrador.telefono" /></td>
+              <td><input [(ngModel)]="borrador.distrito" /></td>
+              <td>
+                <select [(ngModel)]="borrador.sexo">
+                  <option [ngValue]="null">-</option>
+                  <option value="H">H</option>
+                  <option value="M">M</option>
+                </select>
+              </td>
+              <td class="acciones">
+                <button type="button" (click)="guardar.emit(borrador)">Guardar</button>
+                <button type="button" class="secundario" (click)="cancelar.emit()">Cancelar</button>
+              </td>
+            </tr>
+          } @else {
+            <tr>
+              <td>{{ r.id }}</td>
+              <td>{{ r.nombre }}</td>
+              <td>{{ r.email }}</td>
+              <td>{{ r.telefono || '-' }}</td>
+              <td>{{ r.distrito || '-' }}</td>
+              <td>{{ r.sexo || '-' }}</td>
+              <td class="acciones">
+                <button type="button" (click)="empezarEdicion(r)" [disabled]="editandoId() !== null">Editar</button>
+                <button type="button" class="peligro" (click)="confirmarEliminar(r)" [disabled]="eliminando() === r.id">
+                  {{ eliminando() === r.id ? 'Eliminando...' : 'Eliminar' }}
+                </button>
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  }
+</section>

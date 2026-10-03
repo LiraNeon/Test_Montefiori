@@ -1,0 +1,17 @@
+<section class="carga">
+  <h2>Cargar archivo Excel</h2>
+
+  <div class="fila">
+    <input #inputArchivo type="file" accept=".xlsx" (change)="seleccionar($event)" [disabled]="cargando()" />
+    <button type="button" (click)="subir()" [disabled]="!archivo() || cargando()">
+      {{ cargando() ? 'Cargando...' : 'Subir' }}
+    </button>
+  </div>
+
+  @if (error()) {
+    <p class="mensaje error">{{ error() }}</p>
+  }
+  @if (exito()) {
+    <p class="mensaje exito">{{ exito() }}</p>
+  }
+</section>
