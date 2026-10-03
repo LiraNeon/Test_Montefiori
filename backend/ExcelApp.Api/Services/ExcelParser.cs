@@ -41,11 +41,16 @@ public class ExcelParser : IExcelParser
                 {
                     Nombre = nombre,
                     Email = email,
-                    Telefono = columnas.TryGetValue("telefono", out var col)
-                        ? row.Cell(col).GetString().Trim() : null
+                    Telefono = Opcional(row, "telefono"),
+                    Distrito = Opcional(row, "distrito"),
+                    Sexo = Opcional(row, "sexo")?.ToUpperInvariant()
                 });
             }
             return registros;
+
+            // Lee una columna que puede no venir en el Excel
+            string? Opcional(IXLRow row, string columna) =>
+                columnas.TryGetValue(columna, out var col) ? row.Cell(col).GetString().Trim() : null;
         }
     }
 }

@@ -36,6 +36,18 @@ public class RegistrosController(IRegistroRepository repo, IExcelParser parser) 
         }
     }
 
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update(int id, Registro datos)
+    {
+        if (string.IsNullOrWhiteSpace(datos.Nombre) || string.IsNullOrWhiteSpace(datos.Email))
+            return BadRequest(new { mensaje = "Nombre y email son obligatorios." });
+
+        var actualizado = await repo.UpdateAsync(id, datos);
+        return actualizado is null
+            ? NotFound(new { mensaje = $"El registro {id} no existe." })
+            : Ok(actualizado);
+    }
+
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id) =>
         await repo.DeleteAsync(id) ? NoContent() : NotFound(new { mensaje = $"El registro {id} no existe." });
